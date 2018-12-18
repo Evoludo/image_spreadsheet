@@ -37,7 +37,9 @@ def main():
     
     with xlsxwriter.Workbook(context.output) as wb:
         ws = wb.add_worksheet()
-        ws.set_column(0, context.width, 4)
+        for r in range(context.height * 3):
+            ws.set_row(r, 1)
+        ws.set_column(0, context.width, 2)
 
         red_format = {
             'type': '2_color_scale',

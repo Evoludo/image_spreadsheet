@@ -2,6 +2,7 @@
 
 import argparse
 import csv
+import xlsxwriter
 from PIL import Image
 
 
@@ -20,7 +21,6 @@ def setup_args():
                         metavar='image',
                         help='Input image file path')
     parser.add_argument('output',
-                        type=argparse.FileType('w'),
                         help='Output image file path')
 
 
@@ -31,22 +31,24 @@ def main():
     parser = setup_args()
     context = parser.parse_args()
     
-    with Image.open(context.image_path) as image:
-        csv_writer = csv.writer(context.output)
+    with xlsxwriter.Workbook(context.output) as wb:
+        ws = wb.add_worksheet()
 
-        rgb_image = image.convert('RGB')
-        image.resize((context.width, context.height))
+        with Image.open(context.image_path) as image:
+            rgb_image = image.convert('RGB')
+            image = image.resize((context.width, context.height))
+            image.show()
 
-        rows_count = 0
-        for i in range(context.height):
-            row = [rgb_image.getpixel((i, j)) for j in range(context.width)]
-            rgb_rows = zip(*row)
-            
-            for rgb_row in rgb_rows:
-                csv_writer.writerow(rgb_row)
-                rows_count += 1
+            rows_count = 0
+            for i in range(context.height):
+                row = [rgb_image.getpixel((i, j)) for j in range(context.width)]
+                rgb_rows = zip(*row)
+                
+                for rgb_row in rgb_rows:
+                    ws.write_row('A' + str(rows_count + 1), rgb_row)
+                    rows_count += 1
 
-    print('Wrote {0} rows to {1}'.format(rows_count, context.output.name))
+    print('Wrote {0} rows to {1}'.format(rows_count, context.output))
 
 if __name__ == '__main__':
     main()

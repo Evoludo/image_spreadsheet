@@ -34,6 +34,40 @@ def main():
     with xlsxwriter.Workbook(context.output) as wb:
         ws = wb.add_worksheet()
 
+        red_format = {
+            'type': '2_color_scale',
+            'min_value': 0,
+            'max_value': 255,
+            'min_color': '#000000',
+            'max_color': '#FF0000'
+        }
+
+        green_format = {
+            'type': '2_color_scale',
+            'min_value': 0,
+            'max_value': 255,
+            'min_color': '#000000',
+            'max_color': '#00FF00'
+        }
+
+        blue_format = {
+            'type': '2_color_scale',
+            'min_value': 0,
+            'max_value': 255,
+            'min_color': '#000000',
+            'max_color': '#0000FF'
+        }
+
+        formats = {
+            0: red_format,
+            1: green_format,
+            2: blue_format
+        }
+
+        for r in range(context.height * 3):
+            for c in range (context.width):
+                ws.conditional_format(r, 0, r, c, formats[r % 3])
+
         with Image.open(context.image_path) as image:
             rgb_image = image.convert('RGB')
             rgb_image = rgb_image.resize((context.width, context.height))

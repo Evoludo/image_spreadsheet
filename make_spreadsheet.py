@@ -37,7 +37,6 @@ def main():
         with Image.open(context.image_path) as image:
             rgb_image = image.convert('RGB')
             image = image.resize((context.width, context.height))
-            image.show()
 
             rows_count = 0
             for i in range(context.height):

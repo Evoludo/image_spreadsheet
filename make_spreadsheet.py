@@ -36,11 +36,11 @@ def main():
 
         with Image.open(context.image_path) as image:
             rgb_image = image.convert('RGB')
-            image = image.resize((context.width, context.height))
+            rgb_image = rgb_image.resize((context.width, context.height))
 
             rows_count = 0
             for i in range(context.height):
-                row = [rgb_image.getpixel((i, j)) for j in range(context.width)]
+                row = [rgb_image.getpixel((j, i)) for j in range(context.width)]
                 rgb_rows = zip(*row)
                 
                 for rgb_row in rgb_rows:

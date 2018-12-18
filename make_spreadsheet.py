@@ -17,6 +17,10 @@ def setup_args():
                         type=int,
                         default=24,
                         help='Output image height in 3x cell rows')
+    parser.add_argument('--no-formatting',
+                        default=False,
+                        action='store_true',
+                        help='Don\'t use conditional formatting in spreadsheet, instead just output the numbers themselves')
     parser.add_argument('image_path',
                         metavar='image',
                         help='Input image file path')
@@ -65,9 +69,10 @@ def main():
             2: blue_format
         }
 
-        for r in range(context.height * 3):
-            for c in range (context.width):
-                ws.conditional_format(r, 0, r, c, formats[r % 3])
+        if not context.no_formatting:
+            for r in range(context.height * 3):
+                for c in range (context.width):
+                    ws.conditional_format(r, 0, r, c, formats[r % 3])
 
         with Image.open(context.image_path) as image:
             rgb_image = image.convert('RGB')

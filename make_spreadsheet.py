@@ -71,8 +71,7 @@ def main():
 
         if not context.no_formatting:
             for r in range(context.height * 3):
-                for c in range (context.width):
-                    ws.conditional_format(r, 0, r, c, formats[r % 3])
+                ws.conditional_format(r, 0, r, context.width, formats[r % 3])
 
         with Image.open(context.image_path) as image:
             rgb_image = image.convert('RGB')
